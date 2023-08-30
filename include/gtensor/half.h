@@ -6,7 +6,8 @@
 #if __has_include(<cuda_fp16.h>)
 #include <cuda_fp16.h>
 #define GTENSOR_FP16_CUDA_HEADER
-#elif 0 // TODO check if other fp16 type available, e.g., _Float16
+#elif CXX_FLAG_FLOAT16 // TODO check if other fp16 type available, e.g., _Float16
+#define GTENSOR_FLOAT16_TYPE_AVAILABLE
 #else
 #error "GTENSOR_ENABLE_FP16=ON, but no 16-bit FP type available!"
 #endif
@@ -21,6 +22,8 @@ namespace gt
 
 #if defined(GTENSOR_FP16_CUDA_HEADER)
 using storage_type = __half;
+#elif defined(GTENSOR_FLOAT16_TYPE_AVAILABLE)
+using storage_type = _Float16;
 #else
 #error "GTENSOR_ENABLE_FP16=ON, but no 16-bit FP type available!"
 #endif
@@ -29,6 +32,8 @@ using storage_type = __half;
     && defined(__CUDA_ARCH__) \
     && (__CUDA_ARCH__ >= 530)
 using compute_type = __half;
+#elif defined(GTENSOR_FLOAT16_TYPE_AVAILABLE)
+using compute_type = _Float16;
 #else
 using compute_type = float;
 #endif
@@ -37,6 +42,12 @@ class half
 {
 public:
     half() = default;
+
+#if defined(GTENSOR_FLOAT16_TYPE_AVAILABLE)
+    GT_INLINE half(int x) : x(x) {};
+    GT_INLINE half(double x) : x(x) {};
+#endif
+
     GT_INLINE half(float x) : x(x) {};
     GT_INLINE half(storage_type x) : x(x) {};
 
