@@ -44,14 +44,14 @@ public:
     half() = default;
 
 #if defined(GTENSOR_FLOAT16_TYPE_AVAILABLE)
-    GT_INLINE half(int x) : x(x) {};
-    GT_INLINE half(double x) : x(x) {};
+    GT_INLINE half(int x) : x(static_cast<storage_type>(x)) {};
+    GT_INLINE half(double x) : x(static_cast<storage_type>(x)) {};
 #endif
 
-    GT_INLINE half(float x) : x(x) {};
+    GT_INLINE half(float x) : x(static_cast<storage_type>(x)) {};
     GT_INLINE half(storage_type x) : x(x) {};
 
-    GT_INLINE const half& operator=(const float f) { x = f; return *this; }
+    GT_INLINE const half& operator=(const float f) { x = static_cast<storage_type>(f); return *this; }
     GT_INLINE compute_type Get() const { return static_cast<compute_type>(x); }
 private:
     storage_type x;
