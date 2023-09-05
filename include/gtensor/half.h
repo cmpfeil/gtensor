@@ -61,6 +61,10 @@ private:
     GT_INLINE half operator op(const half& lhs, const half& rhs) \
     { return half( lhs.Get() op rhs.Get() ); }
 
+#define PROVIDE_HALF_BINARY_UPDATE_OPERATOR(op) \
+    GT_INLINE half& operator op(half& lhs, const half& rhs) \
+    { auto tmp = lhs.Get(); tmp op rhs.Get(); lhs = tmp; return lhs; }
+
 #define PROVIDE_MIXED_HALF_BINARY_ARITHMETIC_OPERATOR(op, fp_type) \
     \
     GT_INLINE fp_type operator op(const half& lhs, const fp_type& rhs) \
@@ -73,6 +77,11 @@ PROVIDE_HALF_BINARY_ARITHMETIC_OPERATOR(+);
 PROVIDE_HALF_BINARY_ARITHMETIC_OPERATOR(-);
 PROVIDE_HALF_BINARY_ARITHMETIC_OPERATOR(*);
 PROVIDE_HALF_BINARY_ARITHMETIC_OPERATOR(/);
+
+PROVIDE_HALF_BINARY_UPDATE_OPERATOR(+=);
+PROVIDE_HALF_BINARY_UPDATE_OPERATOR(-=);
+PROVIDE_HALF_BINARY_UPDATE_OPERATOR(*=);
+PROVIDE_HALF_BINARY_UPDATE_OPERATOR(/=);
 
 PROVIDE_MIXED_HALF_BINARY_ARITHMETIC_OPERATOR(+, float);
 PROVIDE_MIXED_HALF_BINARY_ARITHMETIC_OPERATOR(-, float);
@@ -123,6 +132,7 @@ std::ostream& operator<<(std::ostream& s, const half& h)
 } // namespace gt
 
 #undef PROVIDE_HALF_BINARY_ARITHMETIC_OPERATOR
+#undef PROVIDE_HALF_BINARY_UPDATE_OPERATOR
 #undef PROVIDE_MIXED_HALF_BINARY_ARITHMETIC_OPERATOR
 #undef PROVIDE_HALF_COMPARISON_OPERATOR
 #undef PROVIDE_MIXED_HALF_COMPARISON_OPERATOR

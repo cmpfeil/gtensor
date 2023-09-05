@@ -272,3 +272,57 @@ TEST(half, mixed_precision_device)
 {
     test_mixed_precision_helper<gt::space::device>();
 }
+
+TEST(half, complex_scalar_arithmetic)
+{
+    gt::complex<gt::half> a{7.0, -2.0};
+    gt::complex<gt::half> b{7.0, 2.0};
+
+    gt::complex<gt::half> c{0.0, 0.0};
+    gt::complex<gt::half> ref{0.0, 0.0};
+
+    c = a + b;
+    ref = gt::complex<gt::half>{14.0, 0.0};
+    EXPECT_EQ(c, ref);
+
+    c = a - b;
+    ref = gt::complex<gt::half>{0.0, -4.0};
+    EXPECT_EQ(c, ref);
+
+    c = a * b;
+    ref = gt::complex<gt::half>{53.0, 0.0};
+    EXPECT_EQ(c, ref);
+
+    c = c / a;
+    ref = b;
+    EXPECT_EQ(c, ref);
+}
+
+TEST(half, complex_ops)
+{
+  using T = gt::complex<gt::half>;
+  gt::gtensor<T, 1> h_a(2);
+  gt::gtensor<T, 1> h_b(h_a.shape());
+  gt::gtensor<T, 1> h_c(h_a.shape());
+  gt::gtensor<T, 1> c(h_a.shape());
+
+  h_a(0) = T{7., -2.};
+  h_a(1) = T{1., 4.};
+  h_b(0) = T{7., 2.};
+  h_b(1) = T{1., -4.};
+
+  h_c = h_a + h_b;
+  c(0) = T{14., 0.};
+  c(1) = T{2., 0.};
+  EXPECT_EQ(h_c, c);
+
+  h_c = h_a - h_b;
+  c(0) = T{0., -4.};
+  c(1) = T{0., 8.};
+  EXPECT_EQ(h_c, c);
+
+  h_c = h_a * h_b;
+  c(0) = T{53., 0.};
+  c(1) = T{17., 0.};
+  EXPECT_EQ(h_c, c);
+}
