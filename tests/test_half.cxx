@@ -295,7 +295,10 @@ TEST(half, complex_scalar_arithmetic)
 
     c = c / a;
     ref = b;
-    EXPECT_EQ(c, ref);
+    double heps4 = 4.0 / 1024;
+    EXPECT_NEAR(c.real().Get(), ref.real().Get(), heps4);
+    EXPECT_NEAR(c.imag().Get(), ref.imag().Get(), heps4);
+//    EXPECT_EQ(c, ref); [FAILS in _Float16 arithmetic: 7.00390625 != 7.0]
 }
 
 TEST(half, complex_ops)
