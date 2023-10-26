@@ -1,12 +1,46 @@
 #ifndef GTENSOR_COMPLEX_FLOAT16T_H
 #define GTENSOR_COMPLEX_FLOAT16T_H
 
-#include "complex.h"
 #include "float16_t.h"
+#include "macros.h"
 #include <iostream>
+#include <type_traits>
+
+#if defined(GTENSOR_DEVICE_CUDA) || defined(GTENSOR_DEVICE_HIP)
+#include <thrust/complex.h>
+using todo_classic_complex_float = thrust::complex<float>;
+#else
+#include <complex>
+using todo_classic_complex_float = std::complex<float>;
+#endif
 
 namespace gt
 {
+
+// ======================================================================
+// is_classic_complex_v
+
+template <typename T>
+struct is_classic_complex : public std::false_type
+{};
+
+#if defined(GTENSOR_DEVICE_CUDA) || defined(GTENSOR_DEVICE_HIP)
+
+template <typename T>
+struct is_classic_complex<thrust::complex<T>> : public std::true_type
+{};
+
+#else // fallback to std::complex, e.g. for host backend
+
+struct is_classic_complex<std::complex<T>> : public std::true_type
+{};
+
+#endif
+
+template <typename T>
+constexpr bool is_classic_complex_v = is_classic_complex<T>::value;
+
+// ======================================================================
 
 // ======================================================================
 // complex_float16_t
@@ -112,8 +146,9 @@ public:
     : _real(re), _imag(im)
   {}
   complex_float16_t(const complex_float16_t&) = default;
-  template <class X>
-  GT_INLINE explicit complex_float16_t(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE explicit complex_float16_t(const C& z)
     : _real(z.real()), _imag(z.imag())
   {}
 
@@ -179,33 +214,38 @@ public:
     return *this;
   }
 
-  template <class X>
-  GT_INLINE complex_float16_t& operator=(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE complex_float16_t& operator=(const C& z)
   {
     _real = z.real();
     _imag = z.imag();
     return *this;
   }
-  template <class X>
-  GT_INLINE complex_float16_t& operator+=(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE complex_float16_t& operator+=(const C& z)
   {
     *this += complex_float16_t{z};
     return *this;
   }
-  template <class X>
-  GT_INLINE complex_float16_t& operator-=(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE complex_float16_t& operator-=(const C& z)
   {
     *this -= complex_float16_t{z};
     return *this;
   }
-  template <class X>
-  GT_INLINE complex_float16_t& operator*=(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE complex_float16_t& operator*=(const C& z)
   {
     *this *= complex_float16_t{z};
     return *this;
   }
-  template <class X>
-  GT_INLINE complex_float16_t& operator/=(const complex<X>& z)
+  template <class C,
+            typename Enable = std::enable_if_t<is_classic_complex_v<C>>>
+  GT_INLINE complex_float16_t& operator/=(const C& z)
   {
     *this /= complex_float16_t{z};
     return *this;
@@ -344,7 +384,7 @@ template <class CharT, class Traits>
 std::basic_istream<CharT, Traits>& operator>>(
   std::basic_istream<CharT, Traits>& s, complex_float16_t& z)
 {
-  complex<float> w;
+  todo_classic_complex_float w;
   s >> w;
   z = w;
   return s;

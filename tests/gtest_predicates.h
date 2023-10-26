@@ -75,7 +75,7 @@ std::enable_if_t<std::is_floating_point<R1>::value &&
                    std::is_floating_point<R2>::value,
                  testing::AssertionResult>
 pred_near3(const char* xname, const char* yname, const char* mname,
-           gt::complex<R1> x, gt::complex<R2> y, double max_err = -1.0)
+           gt::detail::classic_complex<R1> x, gt::detail::classic_complex<R2> y, double max_err = -1.0)
 {
   using R = decltype(std::declval<R1>() - std::declval<R2>());
   if (max_err == -1.0) {
@@ -101,7 +101,7 @@ std::enable_if_t<std::is_floating_point<R1>::value &&
                    std::is_arithmetic<R2>::value,
                  testing::AssertionResult>
 pred_near3(const char* xname, const char* yname, const char* mname,
-           gt::complex<R1> x, R2 y, double max_err = -1.0)
+           gt::detail::classic_complex<R1> x, R2 y, double max_err = -1.0)
 {
   return pred_near3(xname, yname, mname,
                     gt::complex<double>(x.real(), x.imag()),

@@ -11,10 +11,18 @@
 #include <complex>
 #endif
 
+#if defined(GTENSOR_ENABLE_FP16)
+#include "gtensor/complex_float16_t.h"
+#include "gtensor/float16_t.h"
+#endif
+
 #include "gtensor/device_ptr.h"
 #include "gtensor/meta.h"
 
 namespace gt
+{
+
+namespace detail
 {
 
 // NOTE: always use thrust complex for CUDA and HIP, regardless of storage
@@ -23,20 +31,39 @@ namespace gt
 #if defined(GTENSOR_DEVICE_CUDA) || defined(GTENSOR_DEVICE_HIP)
 
 template <typename T>
-using complex = thrust::complex<T>;
+using classic_complex = thrust::complex<T>;
 
 #elif defined(GTENSOR_DEVICE_SYCL)
 
 // TODO: this will hopefully be standardized soon and be sycl::complex
 template <typename T>
-using complex = gt::sycl_cplx::complex<T>;
+using classic_complex = gt::sycl_cplx::complex<T>;
 
 #else // fallback to std::complex, e.g. for host backend
 
 template <typename T>
-using complex = std::complex<T>;
+using classic_complex = std::complex<T>;
 
 #endif
+
+template <typename T>
+struct ComplexAliasTypedef
+{
+  typedef classic_complex<T> type; //TODO: T --> std::enable_if_t<std::is_floating_point_v<T>, T>
+};
+
+#if defined(GTENSOR_ENABLE_FP16)
+template <>
+struct ComplexAliasTypedef<gt::float16_t>
+{
+  typedef gt::complex_float16_t type;
+};
+#endif
+
+} // namespace detail
+
+template <typename T>
+using complex = typename detail::ComplexAliasTypedef<T>::type;
 
 // ======================================================================
 // is_complex
@@ -46,8 +73,14 @@ struct is_complex : public std::false_type
 {};
 
 template <typename T>
-struct is_complex<complex<T>> : public std::true_type
+struct is_complex<detail::classic_complex<T>> : public std::true_type
 {};
+
+#if defined(GTENSOR_ENABLE_FP16)
+template <>
+struct is_complex<gt::complex_float16_t> : public std::true_type
+{};
+#endif
 
 template <typename T>
 constexpr bool is_complex_v = is_complex<T>::value;
@@ -78,10 +111,18 @@ struct complex_subtype
 };
 
 template <typename R>
-struct complex_subtype<gt::complex<R>>
+struct complex_subtype<gt::detail::classic_complex<R>>
 {
   using type = R;
 };
+
+#if defined(GTENSOR_ENABLE_FP16)
+template <>
+struct complex_subtype<gt::complex_float16_t>
+{
+  using type = gt::float16_t;
+};
+#endif
 
 template <typename T>
 using complex_subtype_t = typename complex_subtype<T>::type;

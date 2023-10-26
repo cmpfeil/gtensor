@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "macros.h"
+
 #if __has_include(<cuda_fp16.h>)
 #include <cuda_fp16.h>
 #define GTENSOR_FP16_CUDA_HEADER

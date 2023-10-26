@@ -4,6 +4,7 @@
 #include <complex>
 #include <type_traits>
 
+#include "complex.h"
 #include "device_runtime.h"
 #include "macros.h"
 
@@ -16,7 +17,7 @@ namespace gt
 // abs
 
 template <typename T>
-GT_INLINE T abs(const complex<T>& a)
+GT_INLINE T abs(const detail::classic_complex<T>& a)
 {
   return thrust::abs(a);
 }
@@ -24,13 +25,13 @@ GT_INLINE T abs(const complex<T>& a)
 template <typename T>
 GT_INLINE std::enable_if_t<std::is_floating_point<T>::value, T> abs(const T a)
 {
-  return gt::abs(complex<T>(a, 0));
+  return gt::abs(detail::classic_complex<T>(a, 0));
 }
 
 template <typename T>
 GT_INLINE auto abs(const std::complex<T>& a)
 {
-  return gt::abs(complex<T>(a));
+  return gt::abs(detail::classic_complex<T>(a));
 }
 
 template <typename T>
