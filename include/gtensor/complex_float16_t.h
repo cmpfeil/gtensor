@@ -17,6 +17,8 @@ using todo_classic_complex_float = std::complex<float>;
 namespace gt
 {
 
+namespace detail
+{
 // ======================================================================
 // is_classic_complex_v
 
@@ -415,6 +417,14 @@ GT_INLINE complex_float16_t conj(const complex_float16_t& z)
 {
   return complex_float16_t{z.real(), -z.imag()};
 }
+
+} // namespace detail
+
+using detail::real;
+using detail::imag;
+using detail::abs;
+using detail::norm;
+using detail::conj;
 
 } // namespace gt
 

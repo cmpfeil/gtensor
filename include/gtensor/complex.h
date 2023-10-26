@@ -56,7 +56,7 @@ struct ComplexAliasTypedef
 template <>
 struct ComplexAliasTypedef<gt::float16_t>
 {
-  typedef gt::complex_float16_t type;
+  typedef gt::detail::complex_float16_t type;
 };
 #endif
 
@@ -78,7 +78,7 @@ struct is_complex<detail::classic_complex<T>> : public std::true_type
 
 #if defined(GTENSOR_ENABLE_FP16)
 template <>
-struct is_complex<gt::complex_float16_t> : public std::true_type
+struct is_complex<gt::detail::complex_float16_t> : public std::true_type
 {};
 #endif
 
@@ -118,7 +118,7 @@ struct complex_subtype<gt::detail::classic_complex<R>>
 
 #if defined(GTENSOR_ENABLE_FP16)
 template <>
-struct complex_subtype<gt::complex_float16_t>
+struct complex_subtype<gt::detail::complex_float16_t>
 {
   using type = gt::float16_t;
 };
