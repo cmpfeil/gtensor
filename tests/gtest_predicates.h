@@ -75,7 +75,8 @@ std::enable_if_t<std::is_floating_point<R1>::value &&
                    std::is_floating_point<R2>::value,
                  testing::AssertionResult>
 pred_near3(const char* xname, const char* yname, const char* mname,
-           gt::detail::classic_complex<R1> x, gt::detail::classic_complex<R2> y, double max_err = -1.0)
+           gt::detail::classic_complex<R1> x, gt::detail::classic_complex<R2> y,
+           double max_err = -1.0)
 {
   using R = decltype(std::declval<R1>() - std::declval<R2>());
   if (max_err == -1.0) {

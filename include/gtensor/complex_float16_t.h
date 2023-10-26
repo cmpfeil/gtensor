@@ -420,11 +420,11 @@ GT_INLINE complex_float16_t conj(const complex_float16_t& z)
 
 } // namespace detail
 
-using detail::real;
-using detail::imag;
 using detail::abs;
-using detail::norm;
 using detail::conj;
+using detail::imag;
+using detail::norm;
+using detail::real;
 
 } // namespace gt
 

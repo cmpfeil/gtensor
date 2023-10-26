@@ -51,7 +51,8 @@ using classic_complex = std::complex<T>;
 template <typename T>
 struct ComplexAliasTypedef
 {
-  typedef classic_complex<std::enable_if_t<std::is_floating_point<T>::value, T>> type;
+  typedef classic_complex<std::enable_if_t<std::is_floating_point<T>::value, T>>
+    type;
 };
 
 #if defined(GTENSOR_ENABLE_FP16)
