@@ -8,10 +8,10 @@
 
 #if defined(GTENSOR_DEVICE_CUDA) || defined(GTENSOR_DEVICE_HIP)
 #include <thrust/complex.h>
-using todo_classic_complex_float = thrust::complex<float>;
+using classic_complex_float = thrust::complex<float>;
 #else
 #include <complex>
-using todo_classic_complex_float = std::complex<float>;
+using classic_complex_float = std::complex<float>;
 #endif
 
 namespace gt
@@ -386,7 +386,7 @@ template <class CharT, class Traits>
 std::basic_istream<CharT, Traits>& operator>>(
   std::basic_istream<CharT, Traits>& s, complex_float16_t& z)
 {
-  todo_classic_complex_float w;
+  classic_complex_float w;
   s >> w;
   z = w;
   return s;
