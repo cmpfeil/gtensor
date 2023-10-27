@@ -338,7 +338,6 @@ endif()
 
 if (GTENSOR_ENABLE_FP16)
   message(STATUS "${PROJECT_NAME}: gt::float16_t is ENABLED")
-  message(STATUS "${PROJECT_NAME}: gt::complex_float16_t is ENABLED")
   target_compile_definitions(gtensor_${GTENSOR_DEVICE}
                              INTERFACE GTENSOR_ENABLE_FP16)
 endif()
