@@ -113,6 +113,11 @@ public:
                               const float16_t& im = float16_t())
     : _real(re), _imag(im)
   {}
+  template <typename fp_type/*, typename = std::enable_if_t<std::is_floating_point<fp_type>::value>*/>
+  GT_INLINE complex_float16_t(const fp_type& re = fp_type(),
+                              const fp_type& im = fp_type())
+    : _real(re), _imag(im)
+  {}
   complex_float16_t(const complex_float16_t&) = default;
   template <class X>
   GT_INLINE explicit complex_float16_t(const complex<X>& z)
@@ -150,6 +155,14 @@ public:
   {
     _real /= x;
     _imag /= x;
+    return *this;
+  }
+
+  template <typename ar_type/*, typename = std::enable_if_t<std::is_arithmetic<ar_type>::value>*/>
+  GT_INLINE complex_float16_t& operator=(const ar_type& x)
+  {
+    _real = x;
+    _imag = 0;
     return *this;
   }
 
@@ -211,6 +224,12 @@ public:
   {
     *this /= complex_float16_t{z};
     return *this;
+  }
+
+  template <class X>
+  GT_INLINE operator complex<X>() const
+  {
+    return complex<X>(_real, _imag);
   }
 
 private:

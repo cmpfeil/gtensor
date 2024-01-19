@@ -87,6 +87,11 @@ public:
     return *this;
   }
 
+  GT_INLINE operator float() const
+  {
+    return this->Get();
+  }
+
 private:
   storage_type x;
 };
@@ -206,11 +211,11 @@ GT_INLINE float16_t sqrt(const float16_t& x)
 #endif
 }
 
-std::ostream& operator<<(std::ostream& s, const float16_t& h)
-{
-  s << static_cast<float>(h.Get());
-  return s;
-}
+//std::ostream& operator<<(std::ostream& s, const float16_t& h)
+//{
+//  s << static_cast<float>(h.Get());
+//  return s;
+//}
 
 } // namespace gt
 

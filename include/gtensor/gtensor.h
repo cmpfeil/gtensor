@@ -19,15 +19,17 @@
 #include "operator.h"
 #include "space.h"
 
-#if defined(GTENSOR_ENABLE_FP16)
+// I don't know why this doesn't work with the ifdef....!
+// Seems like GTENSOR_ENABLE_FP16 is not set..., but why?
+//#if defined(GTENSOR_ENABLE_FP16)
 #include "complex_float16_t.h"
 #include "float16_t.h"
-#endif
+//#endif
 
-#if defined(GTENSOR_ENABLE_BF16)
+//#if defined(GTENSOR_ENABLE_BF16)
 #include "bfloat16_t.h"
 #include "complex_bfloat16_t.h"
-#endif
+//#endif
 
 namespace gt
 {
