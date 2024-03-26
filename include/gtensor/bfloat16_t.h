@@ -212,11 +212,11 @@ GT_INLINE bfloat16_t sqrt(const bfloat16_t& x)
 #endif
 }
 
-//std::ostream& operator<<(std::ostream& s, const bfloat16_t& h)
-//{
-//  s << static_cast<float>(h.Get());
-//  return s;
-//}
+GT_INLINE std::ostream& operator<<(std::ostream& s, const bfloat16_t& h)
+{
+  s << static_cast<float>(h.Get());
+  return s;
+}
 
 } // namespace gt
 
