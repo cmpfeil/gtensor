@@ -113,7 +113,7 @@ public:
                                const bfloat16_t& im = bfloat16_t())
     : _real(re), _imag(im)
   {}
-  template <typename fp_type/*, typename = std::enable_if_t<std::is_floating_point<fp_type>::value>*/>
+  template <typename fp_type, typename = std::enable_if_t<std::is_floating_point<fp_type>::value>>
   GT_INLINE complex_bfloat16_t(const fp_type& re = fp_type(),
                               const fp_type& im = fp_type())
     : _real(re), _imag(im)
